@@ -15,17 +15,17 @@ public:
 	};
 
 	FUnaryNode() {}
-	FUnaryNode(const string& source, FNode* node, EOperation oper);
+	FUnaryNode(const string& source, FNodePtr node, EOperation oper);
 
 	virtual double GetResult() const override;
 
-	FNode* GetNode() const;
-	void SetNode(FNode* node);
+	FNodePtr GetNode() const;
+	void SetNode(FNodePtr node);
 	EOperation GetOperator() const;
 	void SetOperator(EOperation oper);
 
 protected:
-	FNode* _node = nullptr;
+	FNodePtr _node = nullptr;
 	EOperation _operator;
 };
 

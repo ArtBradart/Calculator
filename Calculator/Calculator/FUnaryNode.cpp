@@ -1,6 +1,8 @@
 #include "FUnaryNode.h"
 
-FUnaryNode::FUnaryNode(const string& source, FNode* node, EOperation oper)
+#include <cmath>
+
+FUnaryNode::FUnaryNode(const string& source, FNodePtr node, EOperation oper)
 	: FNode(source)
 	, _node(node)
 	, _operator(oper)
@@ -11,23 +13,26 @@ double FUnaryNode::GetResult() const
 	if (_node == nullptr) return 0.0;
 
 	double result = _node->GetResult();
+	auto deg2rad = [](double deg)->double {
+		return deg * 3.14159265 / 180.0;
+	};
 
 	switch (_operator) {
 	case Not: return -result;
-		//case Sin: return sin(Math.toRadians(result));
-		//case Cos: return cos(Math.toRadians(result));
-		//case Tan: return tan(Math.toRadians(result));
+	case Sin: return sin(deg2rad(result));
+	case Cos: return cos(deg2rad(result));
+	case Tan: return tan(deg2rad(result));
 	case Abs: return abs(result);
 	default: return result;
 	}
 }
 
-FNode* FUnaryNode::GetNode() const
+FNodePtr FUnaryNode::GetNode() const
 {
 	return _node;
 }
 
-void FUnaryNode::SetNode(FNode* node)
+void FUnaryNode::SetNode(FNodePtr node)
 {
 	_node = node;
 }

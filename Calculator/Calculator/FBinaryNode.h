@@ -14,20 +14,20 @@ public:
 	};
 
 	FBinaryNode() {}
-	FBinaryNode(const string& source, FNode* left, FNode* right, EOperation oper);
+	FBinaryNode(const string& source, FNodePtr left, FNodePtr right, EOperation oper);
 
 	virtual double GetResult() const override;
 
-	FNode* GetLeft() const;
-	void SetLeft(FNode* left);
-	FNode* GetRight() const;
-	void SetRight(FNode* right);
+	FNodePtr GetLeft() const;
+	void SetLeft(FNodePtr left);
+	FNodePtr GetRight() const;
+	void SetRight(FNodePtr right);
 	EOperation GetOperator() const;
 	void SetOperator(EOperation oper);
 
 protected:
-	FNode* _left = nullptr;
-	FNode* _right = nullptr;
+	FNodePtr _left = nullptr;
+	FNodePtr _right = nullptr;
 	EOperation _operator = EOperation::Add;
 };
 

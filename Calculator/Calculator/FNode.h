@@ -1,16 +1,18 @@
 #pragma once
 
 #include <string>
+#include <memory>
 
 using namespace std;
 
 class FNode
 {
-public:
-	virtual double GetResult() const = 0;
-
+protected:
 	FNode() {}
 	FNode(const string& s);
+
+public:
+	virtual double GetResult() const = 0;
 
 	void SetSource(const string& s);
 	string GetSource();
@@ -19,4 +21,6 @@ protected:
 	string _source = "";
 
 };
+
+typedef shared_ptr<FNode> FNodePtr;
 

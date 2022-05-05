@@ -1,9 +1,8 @@
 #include "Expression.h"
 
-Expression* Expression::Inst()
+Expression::Expression(const string& str)
 {
-	if (_instance) return _instance;
-	return _instance = new Expression();
+	SetSource(str);
 }
 
 bool Expression::IsValid() const
@@ -13,29 +12,16 @@ bool Expression::IsValid() const
 
 double Expression::GetResult() const
 {
-	if (_root != nullptr)
-	{
-		return _root->GetResult();
-	}
-	return 0.0;
+	return _root ? _root->GetResult() : 0.0;
 }
 
 void Expression::SetSource(const string& source)
 {
-
-	string temp = ExpressionParser::Clear(source);
-	if (_source != temp)
+	if (_source != source)
 	{
-		_source = temp;
-		try
-		{
-			_root = ExpressionParser::Parse(_source);
-		}
-		catch (...)
-		{
-			_root = nullptr;
-			//e.printStackTrace();
-		}
+		_source = source;
+		string temp = ExpressionParser::Clear(_source);
+		_root = ExpressionParser::Parse(temp);
 	}
 }
 

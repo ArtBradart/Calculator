@@ -11,15 +11,15 @@ string ExpressionParser::Clear(const string& source)
 	return str;
 }
 
-FNode* ExpressionParser::Parse(const string& source)
+FNodePtr ExpressionParser::Parse(const string& source)
 {
 	string src = Clear(source);
 	if (src.empty())
 	{
-		return new FConstantNode("", 0.0);
+		return FNodePtr(new FConstantNode("", 0.0));
 	}
 
-	FNode* node = PlusMinus(src);
+	FNodePtr node = PlusMinus(src);
 	/*
 	if (node == null)
 	throw new Exception("Can't created node for '" + src + "'.");
@@ -30,9 +30,9 @@ FNode* ExpressionParser::Parse(const string& source)
 	return node;
 }
 
-FNode* ExpressionParser::PlusMinus(const string& s)
+FNodePtr ExpressionParser::PlusMinus(const string& s)
 {
-	FNode* current = MultDiv(s);
+	FNodePtr current = MultDiv(s);
 	if (current == nullptr) return nullptr;
 	//	throw new Exception("Can't created node for '" + s + "'.");
 	string rest = RemoveOfString(s, current->GetSource());
@@ -48,7 +48,7 @@ FNode* ExpressionParser::PlusMinus(const string& s)
 		string next = rest.substr(1);
 		if (next.empty()) return nullptr;
 		//	throw new Exception("Can't parse of '" + s + "'.");
-		FNode* right = MultDiv(next);
+		FNodePtr right = MultDiv(next);
 		if (right == nullptr) return nullptr;
 		//	throw new Exception("Can't created node for '" + next + "'.");
 
@@ -56,7 +56,7 @@ FNode* ExpressionParser::PlusMinus(const string& s)
 			FBinaryNode::EOperation::Add :
 			FBinaryNode::EOperation::Subtract;
 
-		current = new FBinaryNode(current->GetSource() + sign + right->GetSource(), current, right, oper);
+		current = FNodePtr(new FBinaryNode(current->GetSource() + sign + right->GetSource(), current, right, oper));
 
 		rest = RemoveOfString(s, current->GetSource());
 	}
@@ -64,9 +64,9 @@ FNode* ExpressionParser::PlusMinus(const string& s)
 	return current;
 }
 
-FNode* ExpressionParser::MultDiv(const string& s)
+FNodePtr ExpressionParser::MultDiv(const string& s)
 {
-	FNode* current = Power(s);
+	FNodePtr current = Power(s);
 	if (current == nullptr) return nullptr;
 	//	throw new Exception("Can't created node for '" + s + "'.");
 	string rest = RemoveOfString(s, current->GetSource());
@@ -81,7 +81,7 @@ FNode* ExpressionParser::MultDiv(const string& s)
 		string next = rest.substr(1);
 		if (next.empty()) return nullptr;
 		//	throw new Exception("Can't parse of '" + s + "'.");
-		FNode* right = Power(next);
+		FNodePtr right = Power(next);
 		if (right == nullptr) return nullptr;
 		//	throw new Exception("Can't created node for '" + next + "'.");
 
@@ -89,16 +89,16 @@ FNode* ExpressionParser::MultDiv(const string& s)
 			FBinaryNode::EOperation::Multiply :
 			FBinaryNode::EOperation::Divide;
 
-		current = new FBinaryNode(current->GetSource() + sign + right->GetSource(), current, right, oper);
+		current = FNodePtr(new FBinaryNode(current->GetSource() + sign + right->GetSource(), current, right, oper));
 		rest = RemoveOfString(s, current->GetSource());
 	}
 
 	return current;
 }
 
-FNode* ExpressionParser::Power(const string& s)
+FNodePtr ExpressionParser::Power(const string& s)
 {
-	FNode* current = Contain(s);
+	FNodePtr current = Contain(s);
 
 	if (current == nullptr) return nullptr;
 	//	throw new Exception("Can't created node for '" + s + "'.");
@@ -114,19 +114,19 @@ FNode* ExpressionParser::Power(const string& s)
 		string next = rest.substr(1);
 		if (next.empty()) return nullptr;
 		//	throw new Exception("Can't parse of '" + s + "'.");
-		FNode* right = Contain(next);
+		FNodePtr right = Contain(next);
 		if (right == nullptr) return nullptr;
 		//	throw new Exception("Can't created node for '" + next + "'.");
 
 		FBinaryNode::EOperation oper = FBinaryNode::EOperation::Power;
-		current = new FBinaryNode(current->GetSource() + sign + right->GetSource(), current, right, oper);
+		current = FNodePtr(new FBinaryNode(current->GetSource() + sign + right->GetSource(), current, right, oper));
 		rest = RemoveOfString(s, current->GetSource());
 	}
 
 	return current;
 }
 
-FNode* ExpressionParser::Contain(const string& s)
+FNodePtr ExpressionParser::Contain(const string& s)
 {
 	if (s.empty()) return nullptr;
 	//	throw new Exception("Can't created node for '" + s + "'.");
@@ -138,7 +138,7 @@ FNode* ExpressionParser::Contain(const string& s)
 		if (!into.empty() && (into.front() == ')')) return nullptr;
 		//	throw new Exception("Contain is empty in '" + s + "'.");
 
-		FNode* node = PlusMinus(into);
+		FNodePtr node = PlusMinus(into);
 		if (node == nullptr) return nullptr;
 		//	throw new Exception("Can't created node for '" + into + "'.");
 
@@ -147,31 +147,28 @@ FNode* ExpressionParser::Contain(const string& s)
 		if (rest.empty() || (rest.front() != ')')) return nullptr;
 		//	throw new Exception("Parse error: Not found bracked for close '" + s + "'.");
 
-		return new FUnaryNode("(" + src + ")", node, FUnaryNode::EOperation::Contain);
+		return FNodePtr(new FUnaryNode("(" + src + ")", node, FUnaryNode::EOperation::Contain));
 	}
 
 	return FuncOrValue(s);
 }
 
-FNode* ExpressionParser::FuncOrValue(const string& s)
+FNodePtr ExpressionParser::FuncOrValue(const string& s)
 {
 	if (s.empty()) return nullptr;
 	//	throw new Exception("Input is empty.");
 
-	// TODO: if (Character.isDigit(s.front()))
+	if (isdigit(s.front()))
 	{
 		return Num(s);
 	}
 
 	string str = "";
-	int index = 0;
+	size_t index = 0;
 	for (index = 0; index < s.length(); index++)
 	{
 		char c = s[index];
-		// TODO: if (!Character.isLetter(c))
-		{
-			break;
-		}
+		if (!isalpha(c)) break;
 		str += c;
 	}
 
@@ -179,7 +176,7 @@ FNode* ExpressionParser::FuncOrValue(const string& s)
 	{
 		if ((s.length() > index) && (s[index] == '('))
 		{
-			FNode* node = Contain(s.substr(str.length()));
+			FNodePtr node = Contain(s.substr(str.length()));
 			if (node == nullptr) return nullptr;
 			//	throw new Exception("Input is empty.");
 			return Function(str, node);
@@ -190,33 +187,33 @@ FNode* ExpressionParser::FuncOrValue(const string& s)
 	return Num(s);
 }
 
-FNode* ExpressionParser::Num(const string& s)
+FNodePtr ExpressionParser::Num(const string& s)
 {
 	int i = 0;
 	int pointCount = 0;
 	if (s.front() == '-')
 	{
-		FNode* node = Contain(s.substr(1));
+		FNodePtr node = Contain(s.substr(1));
 		if (node == nullptr) return nullptr;
 		//	throw new Exception("Can't created node for '" + s.substring(1) + "'.");
 
-		return new FUnaryNode("-" + node->GetSource(), node, FUnaryNode::EOperation::Not);
+		return FNodePtr(new FUnaryNode("-" + node->GetSource(), node, FUnaryNode::EOperation::Not));
 	}
-	// TODO: while ((i < s.length()) && (Character.isDigit(s.charAt(i)) || (s.charAt(i) == '.')))
+	while ((i < s.length()) && (isdigit(s[i]) || (s[i] == '.')))
 	{
 		if ((s[i] == '.') && (++pointCount > 1)) return nullptr;
 		//	throw new Exception("Not valid number '" + s.substring(0, i + 1) + "'");
 
 		i++;
 	}
-	//if (i == 0)
+	if (i == 0) return nullptr;
 	//	throw new Exception("Can't get number in '" + s + "'");
 
 	double value = atof(s.substr(0, i).c_str());
-	return new FConstantNode(s.substr(0, i), value);
+	return FNodePtr(new FConstantNode(s.substr(0, i), value));
 }
 
-FNode* ExpressionParser::Function(const string& func, FNode* node)
+FNodePtr ExpressionParser::Function(const string& func, FNodePtr node)
 {
 	string src = func + node->GetSource();
 	FUnaryNode::EOperation oper;
@@ -226,7 +223,7 @@ FNode* ExpressionParser::Function(const string& func, FNode* node)
 	else if (func == "abs") oper = FUnaryNode::EOperation::Abs;
 	else return nullptr;
 	//else throw new Exception("Function '" + func + "' is not defined.");
-	return new FUnaryNode(src, node, oper);
+	return FNodePtr(new FUnaryNode(src, node, oper));
 }
 
 string ExpressionParser::RemoveOfString(const string& source, const string& fragment)

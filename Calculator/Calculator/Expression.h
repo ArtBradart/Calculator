@@ -7,11 +7,9 @@ using namespace std;
 
 class Expression
 {
-private:
-	Expression();
-
 public:
-	static Expression* Inst();
+	Expression() {};
+	Expression(const string& str);
 
 	bool IsValid() const;
 	double GetResult() const;
@@ -19,9 +17,8 @@ public:
 	string GetSource() const;
 
 protected:
-	FNode* _root = nullptr;
+	FNodePtr _root = nullptr;
 	string _source = "";
 
-	static Expression* _instance;
 };
 

@@ -1,6 +1,6 @@
 #include "FBinaryNode.h"
 
-FBinaryNode::FBinaryNode(const string& source, FNode* left, FNode* right, EOperation oper)
+FBinaryNode::FBinaryNode(const string& source, FNodePtr left, FNodePtr right, EOperation oper)
 	: FNode(source)
 	, _left(left)
 	, _right(right)
@@ -28,24 +28,24 @@ double FBinaryNode::GetResult() const
 	return 0.0;
 }
 
-FNode* FBinaryNode::GetLeft() const
+FNodePtr FBinaryNode::GetLeft() const
 {
 	return _left;
 }
 
-void FBinaryNode::SetLeft(FNode* left)
+void FBinaryNode::SetLeft(FNodePtr left)
 {
 	_left = left;
 }
 
 // Right.
 
-FNode* FBinaryNode::GetRight() const
+FNodePtr FBinaryNode::GetRight() const
 {
 	return _right;
 }
 
-void FBinaryNode::SetRight(FNode* right)
+void FBinaryNode::SetRight(FNodePtr right)
 {
 	_right = right;
 }

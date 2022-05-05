@@ -4,22 +4,12 @@
 
 using namespace std;
 
-void UpdateSource(const string& source)
+string Calculate(const string& source)
 {
-	Expression::Inst()->SetSource(source);
-
-	if (Expression::Inst()->IsValid()) {
-		double result = Expression::Inst()->GetResult();
-		//NumberFormat nf = NumberFormat.getInstance();
-		//nf.setMaximumFractionDigits(8);
-		//mainWindow.SetResult(nf.format(result));
-		// TODO: Show risult.
-	}
-	else
-	{
-		// TODO: Error.
-		//mainWindow.SetError();
-	}
+	Expression exp(source);
+	return exp.IsValid() ? 
+		to_string(exp.GetResult()):
+		"Error";
 }
 
 int main(int argc, char** argv)
@@ -28,8 +18,9 @@ int main(int argc, char** argv)
 	{
 		cout << "Input: ";
 		string str;
-		cin >> str;
-		cout << "Oops...";
+		getline(cin, str);
+		cout << Calculate(str) << endl << endl;
 	}
+
 	return 0;
 }
