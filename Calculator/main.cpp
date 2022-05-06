@@ -8,7 +8,8 @@ using namespace std;
 
 
 struct Result {
-	string str = "";
+	double value = 0.0;
+	string errorMsg = "";
 	bool isValid = true;
 };
 
@@ -30,8 +31,8 @@ Result Calculate(const string& source)
 {
 	Expression exp(source);
 	return exp.IsValid() ? 
-		Result({ to_string(exp.GetResult()), true }):
-		Result({ exp.GetErrorMsg(), false });
+		Result({ exp.GetResult(), "", true }):
+		Result({ 0.0, exp.GetErrorMsg(), false });
 }
 
 
@@ -48,8 +49,18 @@ int main(int argc, char** argv)
 		getline(cin, str);
 
 		Result result = Calculate(str);
-		SetColor(result.isValid ? EColor::Result : EColor::Error);
-		cout << result.str << endl << endl;
+		if (result.isValid)
+		{
+			SetColor(EColor::Result);
+			cout << result.value;
+		}
+		else
+		{
+			SetColor(EColor::Error);
+			cout << result.errorMsg;
+		}
+
+		cout << endl << endl;
 	}
 
 	return 0;
