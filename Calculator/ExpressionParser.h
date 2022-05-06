@@ -10,6 +10,8 @@ class ExpressionParser
 public:
 	static string Clear(const string& source);
 	static FNodePtr Parse(const string& source);
+	static bool IsError();
+	static string PopErrorMsg();
 
 private:
 	static FNodePtr PlusMinus(const string& s);
@@ -20,6 +22,10 @@ private:
 	static FNodePtr Num(const string& s);
 	static FNodePtr Function(const string& func, FNodePtr node);
 
-	static string RemoveOfString(const string& source, const string& fragment);
+	static string RemoveSubString(const string& source, const string& fragment);
+	static void PushErrorMsg(const string& msg);
+
+private:
+	static string _errorMsg;
 };
 

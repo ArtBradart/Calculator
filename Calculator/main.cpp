@@ -7,9 +7,11 @@ using namespace std;
 string Calculate(const string& source)
 {
 	Expression exp(source);
-	return exp.IsValid() ? 
-		to_string(exp.GetResult()):
-		"Error";
+	if (!exp.IsValid())
+	{
+		return exp.GetErrorMsg();
+	}
+	return to_string(exp.GetResult());
 }
 
 int main(int argc, char** argv)

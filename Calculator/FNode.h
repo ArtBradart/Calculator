@@ -15,7 +15,7 @@ public:
 	virtual double GetResult() const = 0;
 
 	void SetSource(const string& s);
-	string GetSource();
+	string GetSource() const;
 
 protected:
 	string _source = "";

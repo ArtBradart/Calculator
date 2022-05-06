@@ -12,6 +12,7 @@ public:
 	Expression(const string& str);
 
 	bool IsValid() const;
+	string GetErrorMsg() const;
 	double GetResult() const;
 	void SetSource(const string& source);
 	string GetSource() const;

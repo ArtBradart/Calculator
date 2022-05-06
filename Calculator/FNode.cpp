@@ -10,7 +10,7 @@ void FNode::SetSource(const string& s)
 	_source = s;
 }
 
-string FNode::GetSource()
+string FNode::GetSource() const
 {
 	return _source;
 }

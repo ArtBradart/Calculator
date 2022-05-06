@@ -7,7 +7,12 @@ Expression::Expression(const string& str)
 
 bool Expression::IsValid() const
 {
-	return _root != nullptr;
+	return _root != nullptr || !ExpressionParser::IsError();
+}
+
+string Expression::GetErrorMsg() const
+{
+	return ExpressionParser::PopErrorMsg();
 }
 
 double Expression::GetResult() const
