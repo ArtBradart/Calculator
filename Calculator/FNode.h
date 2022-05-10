@@ -5,11 +5,14 @@
 
 using namespace std;
 
+class FNodeManager;
+
 class FNode
 {
 protected:
 	FNode() {}
 	FNode(const string& s);
+	~FNode();
 
 public:
 	virtual double GetResult() const = 0;

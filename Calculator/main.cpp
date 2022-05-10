@@ -3,6 +3,7 @@
 #include <Windows.h>
 
 #include "Expression.h"
+#include "FNodeManager.h"
 
 using namespace std;
 
@@ -17,7 +18,8 @@ enum class EColor : WORD {
 	Title = 0x0003,
 	Input = 0x000F,
 	Result = 0x0002,
-	Error = 0x0004
+	Error = 0x0004,
+	Debug = 0x0006
 };
 
 
@@ -61,6 +63,10 @@ int main(int argc, char** argv)
 		}
 
 		cout << endl << endl;
+
+		SetColor(EColor::Debug);
+		cout << "Debug info: " << endl;
+		cout << FNodeManager::Instance().DebugString() << endl;
 	}
 
 	return 0;

@@ -3,6 +3,7 @@
 #include "FConstantNode.h"
 #include "FBinaryNode.h"
 #include "FUnaryNode.h"
+#include "FNodeManager.h"
 
 string ExpressionParser::_errorMsg = "";
 
@@ -86,7 +87,9 @@ FNodePtr ExpressionParser::PlusMinus(const string& s)
 			FBinaryNode::EOperation::Add :
 			FBinaryNode::EOperation::Subtract;
 
-		current = FNodePtr(new FBinaryNode(current->GetSource() + sign + right->GetSource(), current, right, oper));
+		const std::string key = current->GetSource() + sign + right->GetSource();
+
+		current = FNodeManager::Instance().GetBinaryNode(key, current, right, oper);
 		rest = RemoveSubString(s, current->GetSource());
 	}
 
@@ -129,7 +132,7 @@ FNodePtr ExpressionParser::MultDiv(const string& s)
 			FBinaryNode::EOperation::Multiply :
 			FBinaryNode::EOperation::Divide;
 
-		current = FNodePtr(new FBinaryNode(current->GetSource() + sign + right->GetSource(), current, right, oper));
+		current = FNodeManager::Instance().GetBinaryNode(current->GetSource() + sign + right->GetSource(), current, right, oper);
 		rest = RemoveSubString(s, current->GetSource());
 	}
 
@@ -169,7 +172,8 @@ FNodePtr ExpressionParser::Power(const string& s)
 		}
 
 		FBinaryNode::EOperation oper = FBinaryNode::EOperation::Power;
-		current = FNodePtr(new FBinaryNode(current->GetSource() + sign + right->GetSource(), current, right, oper));
+
+		current = FNodeManager::Instance().GetBinaryNode(current->GetSource() + sign + right->GetSource(), current, right, oper);
 		rest = RemoveSubString(s, current->GetSource());
 	}
 
@@ -209,7 +213,7 @@ FNodePtr ExpressionParser::Contain(const string& s)
 			return nullptr;
 		}
 
-		return FNodePtr(new FUnaryNode("(" + src + ")", node, FUnaryNode::EOperation::Contain));
+		return FNodeManager::Instance().GetUnaryNode("(" + src + ")", node, FUnaryNode::EOperation::Contain);
 	}
 
 	return FuncOrValue(s);
@@ -270,7 +274,7 @@ FNodePtr ExpressionParser::Num(const string& s)
 			return nullptr;
 		}
 
-		return FNodePtr(new FUnaryNode("-" + node->GetSource(), node, FUnaryNode::EOperation::Not));
+		return FNodeManager::Instance().GetUnaryNode("-" + node->GetSource(), node, FUnaryNode::EOperation::Not);
 	}
 
 	// Number recognize.
@@ -313,7 +317,7 @@ FNodePtr ExpressionParser::Num(const string& s)
 	}
 
 	double value = atof(s.substr(0, digitCount).c_str());
-	return FNodePtr(new FConstantNode(s.substr(0, digitCount), value));
+	return FNodeManager::Instance().GetConstantNode(s.substr(0, digitCount), value);
 }
 
 FNodePtr ExpressionParser::Function(const string& func, FNodePtr node)
@@ -330,7 +334,7 @@ FNodePtr ExpressionParser::Function(const string& func, FNodePtr node)
 		return nullptr;
 	}
 
-	return FNodePtr(new FUnaryNode(src, node, oper));
+	return FNodeManager::Instance().GetUnaryNode(src, node, oper);
 }
 
 string ExpressionParser::RemoveSubString(const string& source, const string& fragment)

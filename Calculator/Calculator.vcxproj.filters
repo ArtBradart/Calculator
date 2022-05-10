@@ -36,6 +36,9 @@
     <ClCompile Include="Expression.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FNodeManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ExpressionParser.h">
@@ -54,6 +57,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Expression.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FNodeManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

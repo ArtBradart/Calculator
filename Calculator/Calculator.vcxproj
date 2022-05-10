@@ -144,6 +144,7 @@
     <ClCompile Include="FBinaryNode.cpp" />
     <ClCompile Include="FConstantNode.cpp" />
     <ClCompile Include="FNode.cpp" />
+    <ClCompile Include="FNodeManager.cpp" />
     <ClCompile Include="FUnaryNode.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -153,6 +154,7 @@
     <ClInclude Include="FBinaryNode.h" />
     <ClInclude Include="FConstantNode.h" />
     <ClInclude Include="FNode.h" />
+    <ClInclude Include="FNodeManager.h" />
     <ClInclude Include="FUnaryNode.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
